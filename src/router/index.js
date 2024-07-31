@@ -12,6 +12,67 @@ const routes = [
     redirect: '/dashboard',
     children: [
       {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: () => import('@/views/dashboard/Dashboard.vue'),
+      },
+      {
+        path: "/performances",
+        name: "performances",
+        meta: {
+          requiresAuth: true,
+        },
+        component: () => import('@/views/performance/ManagePerformanceIndex.vue'),
+      },
+      {
+        path: "/complaints",
+        name: "complaints",
+        meta: {
+          requiresAuth: true,
+        },
+        component: () => import('@/views/complaint/ManageComplaintIndex.vue'),
+      },
+      {
+        path: "/feedbacks",
+        name: "feedbacks",
+        meta: {
+          requiresAuth: true,
+        },
+        component: () => import('@/views/feedback/ManageFeedbackIndex.vue'),
+      },
+      {
+        path: "/transactions",
+        name: "transactions",
+        meta: {
+          requiresAuth: true,
+        },
+        component: () => import('@/views/transaction/ManageTransactionIndex.vue'),
+      },
+      {
+        path: "/placements",
+        name: "placements",
+        meta: {
+          requiresAuth: true,
+        },
+        component: () => import('@/views/placement/ManagePlacementIndex.vue'),
+      },
+      {
+        path: "/services",
+        name: "services",
+        meta: {
+          requiresAuth: true,
+        },
+        component: () => import('@/views/services/partial/ManagePartialServiceIndex.vue'),
+      },
+      {
+        path: "/packages",
+        name: "packages",
+        meta: {
+          requiresAuth: true,
+        },
+        component: () => import('@/views/services/package/ManagePackageIndex.vue'),
+      },
+      {
         path: "/categories",
         name: "categories",
         meta: {
@@ -34,6 +95,38 @@ const routes = [
           requiresAuth: true,
         },
         component: () => import('@/views/masters/regency/RegencyIndex.vue'),
+      },
+      {
+        path: "/questions",
+        name: "questions",
+        meta: {
+          requiresAuth: true,
+        },
+        component: () => import('@/views/masters/question/QuestionIndex.vue'),
+      },
+      {
+        path: "/admins",
+        name: "admins",
+        meta: {
+          requiresAuth: true,
+        },
+        component: () => import('@/views/users/admin/ManageAdminIndex.vue'),
+      },
+      {
+        path: "/employees",
+        name: "employees",
+        meta: {
+          requiresAuth: true,
+        },
+        component: () => import('@/views/users/employee/ManageEmployeeIndex.vue'),
+      },
+      {
+        path: "/supervisors",
+        name: "supervisors",
+        meta: {
+          requiresAuth: true,
+        },
+        component: () => import('@/views/users/supervisor/ManageSupervisorIndex.vue'),
       },
     ]
   },
@@ -358,22 +451,22 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-	if(to.meta.requiresAuth){
-		const valid = apiMiddleware.checkAuth();
-		if(valid){
-			return next()
-		}else {
-			return next("login");
-		}
-	} 
-	if(to.meta.requiresNoAuth){
-		const valid = apiMiddleware.checkAuth();
-		if(!valid){
-			return next()
-		}else {
-			return next("categories");
-		}
-	}
+	// if(to.meta.requiresAuth){
+	// 	const valid = apiMiddleware.checkAuth();
+	// 	if(valid){
+	// 		return next()
+	// 	}else {
+	// 		return next("login");
+	// 	}
+	// } 
+	// if(to.meta.requiresNoAuth){
+	// 	const valid = apiMiddleware.checkAuth();
+	// 	if(!valid){
+	// 		return next()
+	// 	}else {
+	// 		return next("categories");
+	// 	}
+	// }
 	return next();
 });
 

@@ -3,9 +3,9 @@
     import fetcher from '@/api/fetcher';
     import { CIcon } from '@coreui/icons-vue';
     import { cilPlus, cilSearch, cilX, cilSave, cilPencil} from '@coreui/icons';
-    import RegencyCreateForm from './forms/RegencyCreateForm.vue';
-    import RegencyEditForm from './forms/RegencyEditForm.vue';
-    import RegencyDeleteForm from './forms/RegencyDeleteForm.vue';
+    import QuestionCreateForm from './forms/QuestionCreateForm.vue';
+    import QuestionEditForm from './forms/QuestionEditForm.vue';
+    import QuestionDeleteForm from './forms/QuestionDeleteForm.vue';
 
     const page = ref(1);
     const datas = ref([]);
@@ -30,17 +30,11 @@
     }
 
     const getDatas = async () => {
-        const getUrl = `/regencies/?page=${page.value}&query=${q.value}`
+        const getUrl = `/questions/?page=${page.value}&query=${q.value}`
         const resp = await fetcher.fetch(getUrl, "GET", false);
         const json = await resp.json();
         if(json.datas){
             datas.value = json.datas;
-            datas.value.forEach(async (val, index) => {
-                const province = await fetchProvince(val.province_id);
-                if(province){
-                    datas.value[index].province_name = province.province;
-                }
-            });
         }else {
             datas.value = [];
         }
@@ -55,16 +49,6 @@
             paginationNext.value = 1;
             paginationMax.value = 1;
         }
-    }
-
-    const fetchProvince = async (id) => {
-        const getUrl = `/provinces/${id}/`;
-        const resp = await fetcher.fetch(getUrl, "GET", false);
-        const json = await resp.json();
-        if(resp.status == 200){
-            return await json.data;
-        }
-        return false;
     }
 
     watchEffect(async () => {
@@ -96,10 +80,10 @@
         aria-labelledby="Add Modal"
     >
         <CModalHeader>
-            <CModalTitle id="ScrollingLongContentExampleLabel2">Tambah Provinsi</CModalTitle>
+            <CModalTitle id="ScrollingLongContentExampleLabel2">Tambah Pertanyaan</CModalTitle>
         </CModalHeader>
         <CModalBody>
-            <RegencyCreateForm 
+            <QuestionCreateForm 
                 ref="createForm" 
                 @toast="(data) => toast(data)" 
                 @refresh="() => getDatas()"
@@ -128,8 +112,8 @@
             <CModalTitle id="ScrollingLongContentExampleLabel3">Edit Kategori</CModalTitle>
         </CModalHeader>
         <CModalBody>
-            <RegencyEditForm 
-                ref="editForm" :regency="editData" 
+            <QuestionEditForm 
+                ref="editForm" :question="editData" 
                 @toast="(data) => toast(data)" 
                 @refresh="() => getDatas()"
                 @toggle="(condition) => showEditModal = condition"
@@ -151,7 +135,7 @@
       <CCol :xs="12">
         <CCard class="mb-4">
             <CCardHeader class="d-flex align-items-center justify-content-between">
-                <strong>Master Daerah</strong>
+                <strong>Master Pertanyaan</strong>
             </CCardHeader>
             <CCardBody>
                 <CRow class="mb-3">
@@ -179,31 +163,27 @@
                     <CTableHead>
                         <CTableRow>
                             <CTableHeaderCell class="text-center" scope="col">No</CTableHeaderCell>
-                            <CTableHeaderCell class="text-center" scope="col">Nama Daerah</CTableHeaderCell>
-                            <CTableHeaderCell class="text-center" scope="col">Provinsi</CTableHeaderCell>
+                            <CTableHeaderCell class="text-center" scope="col">Pertanyaan</CTableHeaderCell>
+                            <CTableHeaderCell class="text-center" scope="col">Hint</CTableHeaderCell>
                             <CTableHeaderCell class="text-center" scope="col">Aksi</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
                     
                     <CTableBody>
-                        <CTableRow :key="index" v-for="({id, regency, province_id, province_name}, index) in datas" v-if="datas.length">
+                        <CTableRow :key="index" v-for="({id, question, hint}, index) in datas" v-if="datas.length">
                             <CTableDataCell class="text-center" scope="row">{{ ((paginationCurrent-1)*10) + index + 1 }}</CTableDataCell>
-                            <CTableDataCell class="text-center">{{ regency }}</CTableDataCell>
-                            <CTableDataCell class="text-center">{{ province_name  }}</CTableDataCell>
+                            <CTableDataCell class="text-center">{{ question }}</CTableDataCell>
+                            <CTableDataCell class="text-center">{{ hint  }}</CTableDataCell>
                             <CTableDataCell class="text-center">
                                 <CDropdown variant="btn-group">
                                     <CDropdownToggle color="light" size="sm" class="bg-transparent" />
                                         <CDropdownMenu>
-                                            <CDropdownItem @click="() => toggleEdit({id, regency, province_id})">
+                                            <CDropdownItem @click="() => toggleEdit({id, question, hint})">
                                                 <CIcon :icon="cilPencil" class="me-2" />
                                                 Edit
                                             </CDropdownItem>
                                             <CDropdownDivider />
-                                            <!-- <CDropdownItem href="#">
-                                                <CIcon :icon="cilTrash" class="me-2" />
-                                                Delete
-                                            </CDropdownItem> -->
-                                            <RegencyDeleteForm 
+                                            <QuestionDeleteForm 
                                                 :id="id" 
                                                 @toast="(data) => toast(data)" 
                                                 @refresh="() => getDatas()"
@@ -217,7 +197,51 @@
                         </CTableRow>
                     </CTableBody>
                 </CTable>
-                pagination
+                <CPagination aria-label="Pagination" class="d-flex justify-content-center">
+                    <CPaginationItem 
+                        aria-label="Previous" 
+                        @click="setPage(paginationPrevious != page ? paginationPrevious : page)"       
+                        :disabled="paginationPrevious == page ? true : false"
+                        href="#"
+                    >
+                        <span aria-hidden="true">&laquo;</span>
+                    </CPaginationItem>
+
+                    <template v-for="index in 3">
+                        <CPaginationItem 
+                            :key="`previousPagination${index}`"
+                            v-if="1 + index < paginationCurrent" 
+                            @click="setPage(1 + index)" 
+                            href="#"
+                        >
+                            {{ paginationMax }}
+                        </CPaginationItem>
+                    </template>
+
+                    <CPaginationItem href="#" active>
+                        {{ paginationCurrent }}
+                    </CPaginationItem>
+
+                    <template v-for="index in 3">
+                        <CPaginationItem 
+                            :key="`nextPagination${index}`"
+                            v-if="paginationCurrent + index + 1 < paginationMax" 
+                            @click="setPage(paginationCurrent + index + 1)" 
+                            href="#"
+                        >
+                            {{ paginationMax }}
+                        </CPaginationItem>
+                    </template>
+
+                    <CPaginationItem 
+                        aria-label="Next" 
+                        @click="setPage(paginationNext != page && paginationNext <= paginationMax ? paginationNext : page)"       
+                        :disabled="paginationNext == page ? true : false"
+                        href="#"
+                    >
+                        <span aria-hidden="true">&raquo;</span>
+                    </CPaginationItem>
+                </CPagination>
             </CCardBody>
         </CCard>
       </CCol>

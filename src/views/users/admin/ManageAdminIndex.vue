@@ -2,10 +2,9 @@
     import {ref, watchEffect} from 'vue';
     import fetcher from '@/api/fetcher';
     import { CIcon } from '@coreui/icons-vue';
-    import { cilPlus, cilSearch, cilX, cilSave, cilPencil} from '@coreui/icons';
-    import RegencyCreateForm from './forms/RegencyCreateForm.vue';
-    import RegencyEditForm from './forms/RegencyEditForm.vue';
-    import RegencyDeleteForm from './forms/RegencyDeleteForm.vue';
+    import { cilPlus, cilSearch, cilX, cilSave, cilPencil, cilFilter} from '@coreui/icons';
+    import AdminCreateForm from './forms/AdminCreateForm.vue';
+    import AdminEditForm from './forms/AdminEditForm.vue';
 
     const page = ref(1);
     const datas = ref([]);
@@ -14,6 +13,8 @@
     const paginationNext = ref(1);
     const paginationMax = ref(1);
     const q = ref("");
+    const selectedRegency = ref(0);
+    const regencies = ref([]);
 
     const showAddModal = ref(false);
     const showEditModal = ref(false);
@@ -30,17 +31,11 @@
     }
 
     const getDatas = async () => {
-        const getUrl = `/regencies/?page=${page.value}&query=${q.value}`
+        const getUrl = `/users/role/admin/?page=${page.value}&query=${q.value}${selectedRegency ? "&regency_id="+selectedRegency.value : ""}`
         const resp = await fetcher.fetch(getUrl, "GET", false);
         const json = await resp.json();
         if(json.datas){
             datas.value = json.datas;
-            datas.value.forEach(async (val, index) => {
-                const province = await fetchProvince(val.province_id);
-                if(province){
-                    datas.value[index].province_name = province.province;
-                }
-            });
         }else {
             datas.value = [];
         }
@@ -55,16 +50,6 @@
             paginationNext.value = 1;
             paginationMax.value = 1;
         }
-    }
-
-    const fetchProvince = async (id) => {
-        const getUrl = `/provinces/${id}/`;
-        const resp = await fetcher.fetch(getUrl, "GET", false);
-        const json = await resp.json();
-        if(resp.status == 200){
-            return await json.data;
-        }
-        return false;
     }
 
     watchEffect(async () => {
@@ -87,6 +72,16 @@
     const submitCreate = () => {
         createForm.value.push();
     }
+    const fetchRegencies = async () => {
+        const getUrl = "/regencies/";
+        const resp = await fetcher.fetch(getUrl, "GET", false);
+        const json = await resp.json();
+
+        if(resp.status == 200){
+            regencies.value = json.datas;
+        }
+    }
+    fetchRegencies();
 </script>
 <template>
     <CModal
@@ -96,10 +91,10 @@
         aria-labelledby="Add Modal"
     >
         <CModalHeader>
-            <CModalTitle id="ScrollingLongContentExampleLabel2">Tambah Provinsi</CModalTitle>
+            <CModalTitle id="ScrollingLongContentExampleLabel2">Tambah Pengguna Admin</CModalTitle>
         </CModalHeader>
         <CModalBody>
-            <RegencyCreateForm 
+            <AdminCreateForm 
                 ref="createForm" 
                 @toast="(data) => toast(data)" 
                 @refresh="() => getDatas()"
@@ -125,11 +120,11 @@
         aria-labelledby="Edit Modal"
     >
         <CModalHeader>
-            <CModalTitle id="ScrollingLongContentExampleLabel3">Edit Kategori</CModalTitle>
+            <CModalTitle id="ScrollingLongContentExampleLabel3">Edit Pengguna Admin#{{ editData.id }}</CModalTitle>
         </CModalHeader>
         <CModalBody>
-            <RegencyEditForm 
-                ref="editForm" :regency="editData" 
+            <AdminEditForm 
+                ref="editForm" :data="editData" 
                 @toast="(data) => toast(data)" 
                 @refresh="() => getDatas()"
                 @toggle="(condition) => showEditModal = condition"
@@ -151,7 +146,7 @@
       <CCol :xs="12">
         <CCard class="mb-4">
             <CCardHeader class="d-flex align-items-center justify-content-between">
-                <strong>Master Daerah</strong>
+                <strong>Manajemen Pengguna Admin</strong>
             </CCardHeader>
             <CCardBody>
                 <CRow class="mb-3">
@@ -163,61 +158,112 @@
                             <CFormInput
                                 placeholder="Search..."
                                 aria-label="Search"
-                                aria-describedby="Cari kategori"
+                                aria-describedby="Cari pengguna admin..."
                                 v-model="q"
                             />
                         </CInputGroup>
                     </CCol>
-                    <CCol :xs="12" :md="6" class="d-flex align-items-center justify-content-end">
+                    <CCol :xs="12" :md="3" class="d-flex align-items-center justify-content-end mb-3 mb-md-0">
+                        <CIcon :icon="cilFilter" class="me-2" />
+                        <CFormSelect
+                            aria-label="Filter Daerah pengguna"
+                            v-model="selectedRegency"
+                        >
+                            <option>Filter Daerah Pengguna</option>
+                            <option :value="regency.id" v-for="regency in regencies" :key="regency.id">
+                                {{ regency.regency }}
+                            </option>
+                        </CFormSelect>
+                    </CCol>
+                    <CCol :xs="12" :md="3" class="d-flex align-items-center justify-content-end">
                         <CButton color="primary" @click="() => (showAddModal = true)">
                             <CIcon :icon="cilPlus" class="me-2" />
                             Tambah
                         </CButton>
                     </CCol>
                 </CRow>
-                <CTable striped>
+                <CTable striped responsive>
                     <CTableHead>
                         <CTableRow>
                             <CTableHeaderCell class="text-center" scope="col">No</CTableHeaderCell>
-                            <CTableHeaderCell class="text-center" scope="col">Nama Daerah</CTableHeaderCell>
-                            <CTableHeaderCell class="text-center" scope="col">Provinsi</CTableHeaderCell>
+                            <CTableHeaderCell class="text-center" scope="col">Email</CTableHeaderCell>
+                            <CTableHeaderCell class="text-center" scope="col">Nama Lengkap</CTableHeaderCell>
+                            <CTableHeaderCell class="text-center" scope="col">No.Telp</CTableHeaderCell>
+                            <!-- <CTableHeaderCell class="text-center" scope="col">Tgl. Verifikasi</CTableHeaderCell> -->
                             <CTableHeaderCell class="text-center" scope="col">Aksi</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
                     
                     <CTableBody>
-                        <CTableRow :key="index" v-for="({id, regency, province_id, province_name}, index) in datas" v-if="datas.length">
+                        <CTableRow :key="index" v-for="(data, index) in datas" v-if="datas.length">
                             <CTableDataCell class="text-center" scope="row">{{ ((paginationCurrent-1)*10) + index + 1 }}</CTableDataCell>
-                            <CTableDataCell class="text-center">{{ regency }}</CTableDataCell>
-                            <CTableDataCell class="text-center">{{ province_name  }}</CTableDataCell>
+                            <CTableDataCell class="text-center">{{ data.email }}</CTableDataCell>
+                            <CTableDataCell class="text-center">{{ data.admin_profile.fullname  }}</CTableDataCell>
+                            <CTableDataCell class="text-center">{{ data.admin_profile.phone  }}</CTableDataCell>
+                            <!-- <CTableDataCell class="text-center">{{ data.verified_at ? data.verified_at : "-"  }}</CTableDataCell> -->
                             <CTableDataCell class="text-center">
                                 <CDropdown variant="btn-group">
                                     <CDropdownToggle color="light" size="sm" class="bg-transparent" />
                                         <CDropdownMenu>
-                                            <CDropdownItem @click="() => toggleEdit({id, regency, province_id})">
+                                            <CDropdownItem @click="() => toggleEdit(data)">
                                                 <CIcon :icon="cilPencil" class="me-2" />
                                                 Edit
                                             </CDropdownItem>
                                             <CDropdownDivider />
-                                            <!-- <CDropdownItem href="#">
-                                                <CIcon :icon="cilTrash" class="me-2" />
-                                                Delete
-                                            </CDropdownItem> -->
-                                            <RegencyDeleteForm 
-                                                :id="id" 
-                                                @toast="(data) => toast(data)" 
-                                                @refresh="() => getDatas()"
-                                            />
                                         </CDropdownMenu>
                                     </CDropdown>
                             </CTableDataCell>
                         </CTableRow>
                         <CTableRow v-else>
-                            <CTableDataCell colspan="4" class="text-center">Data Kosong</CTableDataCell>
+                            <CTableDataCell colspan="6" class="text-center">Data Kosong</CTableDataCell>
                         </CTableRow>
                     </CTableBody>
                 </CTable>
-                pagination
+                <CPagination aria-label="Pagination" class="d-flex justify-content-center">
+                    <CPaginationItem 
+                        aria-label="Previous" 
+                        @click="setPage(paginationPrevious != page ? paginationPrevious : page)"       
+                        :disabled="paginationPrevious == page ? true : false"
+                        href="#"
+                    >
+                        <span aria-hidden="true">&laquo;</span>
+                    </CPaginationItem>
+
+                    <template v-for="index in 3">
+                        <CPaginationItem 
+                            :key="`previousPagination${index}`"
+                            v-if="1 + index < paginationCurrent" 
+                            @click="setPage(1 + index)" 
+                            href="#"
+                        >
+                            {{ paginationMax }}
+                        </CPaginationItem>
+                    </template>
+
+                    <CPaginationItem href="#" active>
+                        {{ paginationCurrent }}
+                    </CPaginationItem>
+
+                    <template v-for="index in 3">
+                        <CPaginationItem 
+                            :key="`nextPagination${index}`"
+                            v-if="paginationCurrent + index + 1 < paginationMax" 
+                            @click="setPage(paginationCurrent + index + 1)" 
+                            href="#"
+                        >
+                            {{ paginationMax }}
+                        </CPaginationItem>
+                    </template>
+
+                    <CPaginationItem 
+                        aria-label="Next" 
+                        @click="setPage(paginationNext != page && paginationNext <= paginationMax ? paginationNext : page)"       
+                        :disabled="paginationNext == page ? true : false"
+                        href="#"
+                    >
+                        <span aria-hidden="true">&raquo;</span>
+                    </CPaginationItem>
+                </CPagination>
             </CCardBody>
         </CCard>
       </CCol>

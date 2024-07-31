@@ -30,7 +30,7 @@
             regency: regencyName.value,
         });
 
-        const postUrl = `/regency/${id}/`;
+        const postUrl = `/regencies/${id}/`;
         emits('onLoad', true);
         const resp = await fetcher.fetch(postUrl, "PATCH", data);
         emits('onLoad', false);

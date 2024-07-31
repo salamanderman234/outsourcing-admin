@@ -32,7 +32,7 @@
     }
 
     const getDatas = async () => {
-        const getUrl = `/provinces/`
+        const getUrl = `/provinces/?page=${page.value}&query=${q.value}`
         const resp = await fetcher.fetch(getUrl, "GET", false);
         const json = await resp.json();
         if(json.datas){

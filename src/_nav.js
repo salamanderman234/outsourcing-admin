@@ -4,20 +4,70 @@ export default [
     name: 'Dashboard',
     to: '/dashboard',
     icon: 'cil-speedometer',
-    badge: {
-      color: 'primary',
-      text: 'NEW',
-    },
-  },
-  {
-    component: 'CNavTitle',
-    name: 'Master',
   },
   {
     component: 'CNavItem',
-    name: 'Master Categori Layanan',
-    to: '/categories',
+    name: 'Setting',
+    to: '/dashboard',
+    icon: 'cil-settings',
+  },
+  {
+    component: 'CNavTitle',
+    name: 'Manajemen Feedback',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Komplain',
+    to: '/complaints',
     icon: 'cil-star',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Feedback',
+    to: '/feedbacks',
+    icon: 'cil-star',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Performa Karyawan',
+    to: '/performances',
+    icon: 'cil-star',
+  },
+  {
+    component: 'CNavTitle',
+    name: 'Manajemen Transaksi & Penempatan',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Transaksi',
+    to: '/transactions',
+    icon: 'cil-star',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Penempatan',
+    to: '/placements',
+    icon: 'cil-star',
+  },
+  {
+    component: 'CNavTitle',
+    name: 'Manajemen Layanan',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Layanan Parsial',
+    to: '/services',
+    icon: 'cil-star',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Paket Layanan',
+    to: '/packages',
+    icon: 'cil-star',
+  },
+  {
+    component: 'CNavTitle',
+    name: 'Manajemen Master Data',
   },
   {
     component: 'CNavItem',
@@ -29,6 +79,40 @@ export default [
     component: 'CNavItem',
     name: 'Master Daerah',
     to: '/regencies',
+    icon: 'cil-star',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Master Kategori Layanan',
+    to: '/categories',
+    icon: 'cil-star',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Master Pertanyaan',
+    to: '/questions',
+    icon: 'cil-star',
+  },
+  {
+    component: 'CNavTitle',
+    name: 'Manajemen Pengguna',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Admin',
+    to: '/admins',
+    icon: 'cil-star',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Supervisor',
+    to: '/supervisors',
+    icon: 'cil-star',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Karyawan',
+    to: '/employees',
     icon: 'cil-star',
   },
   // {

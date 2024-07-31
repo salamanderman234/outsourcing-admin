@@ -3,22 +3,21 @@
     import apiConfig from '@/api/apiConfig';
     import {ref, watchEffect} from "vue";
     import fetcher from '@/api/fetcher';
-    import { cilPlus, cilPencil, cilInfo, cilFilter, cilGroup, cilCheckAlt, cilPaperPlane, cilPeople, cilTask, cilNotes, cilCarAlt, cilX, cilPaperclip } from '@coreui/icons';
+    import { cilPlus, cilPencil, cilInfo, cilFilter, cilGroup, cilCheckAlt, cilPaperPlane, cilPeople, cilTask, cilNotes, cilCarAlt, cilX } from '@coreui/icons';
     import CRUDLayout from '@/layouts/CRUDLayout.vue';
     import DefaultModal from "@/components/DefaultModal.vue";
-    import CategoryDetailForm from "./forms/CategoryDetailForm.vue";
-    import CategoryEditForm from "./forms/CategoryEditForm.vue";
-    import CategoryCreateForm from "./forms/CategoryCreateForm.vue";
-    import CategoryDeleteForm from "./forms/CategoryDeleteForm.vue";
-    import QuestionModal from "./modals/QuestionModal.vue";
+    import PackageDetailForm from "./forms/PackageDetailForm.vue";
+    import PackageEditForm from "./forms/PackageEditForm.vue";
+    import PackageCreateForm from "./forms/PackageCreateForm.vue";
+    import PackageDeleteForm from "./forms/PackageDeleteForm.vue";
     import { useRoute } from 'vue-router';
 
     const route = useRoute();
     const id = route.query.id;
 
-    const resourceUrl = "/categories/";
-    const columns = ["ID", "Nama Kategori"];
-    const fields = ["id" ,"category_name"];
+    const resourceUrl = "/packages/";
+    const columns = ["ID", "Nama Paket", "Minimal Kontrak"];
+    const fields = ["id" ,"package_name", 'min_contract'];
     const regencies = ref([]);
 
     const layout = ref(null);
@@ -31,8 +30,6 @@
     const editModal = ref(null);
     const showEditModal = ref(false);
     const editForm = ref(null);
-
-    const showQuestionModal = ref(false);
 
     const addModal = ref(null);
     const showAddModal = ref(false);
@@ -56,7 +53,7 @@
 
 <template>
     <CRUDLayout
-        title="Manajemen Master Data Kategori"
+        title="Manajemen Paket Layanan"
         :resource_url="resourceUrl"
         :columns="columns"
         :fields="fields"
@@ -64,25 +61,17 @@
         :disable_numbering="true"
     >
         <template #modal-list>
-            <QuestionModal
-                :show="showQuestionModal"
-                :category="detailData"
-                @toast="(val) => layout.toast(val)"
-                @setShow="(val) => showQuestionModal = val"
-            >
-
-            </QuestionModal>
             <DefaultModal
                 ref="detailModal"
                 :show="showDetailModal"
-                :title="`Detail Master Data Kategori`"
+                :title="`Detail Layanan Parsial`"
                 @toggle="(val) => showDetailModal = val"
                 @submit="() => false"
                 :disable_save_button="true"
             >
-                <CategoryDetailForm
+                <PackageDetailForm
                     ref="detailForm" 
-                    :category="detailData"
+                    :data="detailData"
                     @toast="(val) => layout.toast(val)"
                     @toggle="(val) => showDetailModal = val"
                 />
@@ -90,13 +79,13 @@
             <DefaultModal
                 ref="editModal"
                 :show="showEditModal"
-                :title="`Edit Master Data Kategori`"
+                :title="`Edit Paket Layanan`"
                 @toggle="(val) => showEditModal = val"
                 @submit="() => editForm.push()"
             >
-                <CategoryEditForm
+                <PackageEditForm
                     ref="editForm" 
-                    :category="detailData"
+                    :data="detailData"
                     @toggle="(val) => showEditModal = val"
                     @refresh="() => layout.refresh()"
                     @toast="(val) => layout.toast(val)"
@@ -106,11 +95,11 @@
             <DefaultModal
                 ref="addModal"
                 :show="showAddModal"
-                :title="`Tambah Master Data Kategori`"
+                :title="`Tambah Paket Layanan`"
                 @toggle="(val) => showAddModal = val"
                 @submit="() => addForm.push()"
             >
-                <CategoryCreateForm
+                <PackageCreateForm
                     ref="addForm" 
                     :data="detailData"
                     @toggle="(val) => showAddModal = val"
@@ -129,31 +118,18 @@
         </template>   
 
         <template #additional-columns>
-            <CTableHeaderCell class="text-center" scope="col">Gambar Ikon</CTableHeaderCell>
+            <CTableHeaderCell class="text-center" scope="col">Harga</CTableHeaderCell>
         </template>   
 
         <template #additional-fields="{data}">
             <CTableDataCell 
                 class="text-center align-middle"
             >
-                <img 
-                    :src="`${apiConfig.baseUrl}/resource/categories/${data.id}/icon/`" 
-                    width="50" 
-                    alt="-"
-                />
+                {{ data.total_price }}
             </CTableDataCell>
         </template>   
 
         <template #action-list="{data}">
-            <CDropdownItem 
-                @click="() => {
-                    showQuestionModal = true;
-                    detailData = data;
-                }"
-            >
-                <CIcon :icon="cilPaperclip" class="me-2" />
-                Set Pertanyaan
-            </CDropdownItem>
             <CDropdownItem 
                 @click="() => {
                     showDetailModal = true;
@@ -173,7 +149,7 @@
                 Edit
             </CDropdownItem>
             <CDropdownDivider />
-            <CategoryDeleteForm 
+            <PackageDeleteForm 
                 :id="data.id" 
                 @toast="(data) => layout.toast(data)" 
                 @refresh="() => layout.refresh()"
