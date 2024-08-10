@@ -110,6 +110,9 @@
     const sumPerformance = (datas) => {
         let total = 0;
         const length = datas.length;
+        if(length == 0){
+            return 0;
+        }
         datas.forEach((e) => {
             total += e.rate;
         })

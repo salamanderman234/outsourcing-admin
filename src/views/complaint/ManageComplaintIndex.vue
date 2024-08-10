@@ -151,7 +151,7 @@
             <CTableDataCell 
                 class="text-center align-middle"
             >
-                {{ data.placement_employee ? data.placement_employee.placement_detail.placement.id : '-' }}
+                {{ data.placement_employee ? data.placement_employee.placement ? data.placement_employee.placement.placement_id : '-' : "-" }}
             </CTableDataCell>
             <CTableDataCell 
                 class="text-center align-middle"

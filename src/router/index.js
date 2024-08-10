@@ -6,6 +6,10 @@ import DefaultLayout from '@/layouts/DefaultLayout'
 
 const routes = [
   {
+    path: "/",
+    redirect: '/dashboard'
+  },
+  {
     path: "/view",
     name: "view",
     component: DefaultLayout,
