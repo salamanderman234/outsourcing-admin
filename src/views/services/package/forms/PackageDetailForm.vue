@@ -241,7 +241,11 @@
         <hr />
         <div class="mb-3">
             <CFormLabel>Diskon</CFormLabel>
-            <CFormInput disabled v-model="data.discount" placeholder="Potongan harga paket"/>
+            <CFormInput 
+                disabled 
+                placeholder="Potongan harga paket"
+                :value="'Rp. '+`${Intl.NumberFormat('id-ID').format(data.discount)}`"
+            />
             <div class="text-end text-danger" v-if="errors.discount">
                 <small>{{ errors.discount }}</small>
             </div>
@@ -250,8 +254,8 @@
             <CFormLabel>Biaya Total</CFormLabel>
             <CFormInput 
                 disabled 
-                v-model="data.total_price"
                 text="Harga yang tertera merupakan harga perhari"
+                :value="'Rp. '+`${Intl.NumberFormat('id-ID').format(data.total_price)}`"
             />
         </div>
     </CForm>

@@ -13,7 +13,7 @@
     const regencies = ref([]);
     const serviceUser = ref({
         id: props.data.id, 
-        email: "",
+        email: props.data.email,
         password: "",   
         service_user_profile: {
             fullname: props.data.service_user_profile.fullname,
@@ -39,54 +39,6 @@
         gender: "",
         nik: "",
     });
-
-    const onValidationFail = (json) => {
-        const jsonErrors = json.errors;
-        jsonErrors.forEach((error, index) => {
-            const field = error.field;
-            if(errors.value.hasOwnProperty(field)){
-                errors.value[field] = error.error;
-            }
-        });
-    };
-
-    const push = async () => {
-        resetError();
-        if(serviceUser.value.service_user_profile.birth_date){
-            serviceUser.value.service_user_profile.birth_date = new Date(serviceUser.value.service_user_profile.birth_date).toISOString();
-        }
-        if(serviceUser.value.service_user_profile.regency_id){
-            serviceUser.value.service_user_profile.regency_id = parseInt(serviceUser.value.service_user_profile.regency_id);
-        }
-        const data = JSON.stringify(serviceUser.value);
-        const postUrl = `/users/${serviceUser.value.id}/`;
-        emits('onLoad', true);
-        const resp = await fetcher.fetch(postUrl, "PATCH", data);
-        emits('onLoad', false);
-        const json = await resp.json();
-        if(resp.status >= 200 && resp.status <= 299){
-            emits('refresh','');
-            emits('toggle', false);
-        }else if(resp.status == 400 && json.errors) {
-            onValidationFail(json);
-        }
-        const content = resp.status == 200 ? `Data pengguna jasa ${serviceUser.value.service_user_profile.fullname} berhasil diedit !` : json.detail;
-        emits("toast", {
-            "title": json.message,
-            "content": content,
-            "status": resp.status,
-        });
-    }
-
-    const resetError = () => {
-        for(const key in errors.value){
-            const error = errors.value[key];
-            if(error){
-                errors.value[key] = "";
-            }
-        }
-    }
-
     const fetchRegencies = async () => {
         const getUrl = "/regencies/";
         const resp = await fetcher.fetch(getUrl, "GET", false);
@@ -96,12 +48,7 @@
             regencies.value = json.datas;
         }
     }
-
     fetchRegencies();
-
-    defineExpose({
-        push,
-    });
 </script>
 <template>
     <CForm class="px-4 py-4">
@@ -110,13 +57,6 @@
             <CFormInput :class="errors.email ? 'border-danger' : ''" v-model="serviceUser.email" type="text" id="email" placeholder="Email pengguna"/>
             <div class="text-end text-danger" v-if="errors.email">
                 <small>{{ errors.email }}</small>
-            </div>
-        </div>
-        <div class="mb-3">
-            <CFormLabel for="password">Password</CFormLabel>
-            <CFormInput :class="errors.password ? 'border-danger' : ''" v-model="serviceUser.password" type="password" id="password" placeholder="*******"/>
-            <div class="text-end text-danger" v-if="errors.password">
-                <small>{{ errors.password }}</small>
             </div>
         </div>
         <div class="mb-3">

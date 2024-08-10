@@ -1,5 +1,6 @@
 export default {
     checkAuth: () => {
-        return true
+        const user = localStorage.getItem("user");
+        return user && true;
     }
 }

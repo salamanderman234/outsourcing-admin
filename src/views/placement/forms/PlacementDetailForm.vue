@@ -413,9 +413,9 @@
                                     </CFormLabel>
                                     <CFormInput 
                                         class=""
-                                        :value="employee.expected_salary" 
                                         type="text" 
                                         disabled
+                                        :value="'Rp. '+`${Intl.NumberFormat('id-ID').format(employee.expected_salary)}`"
                                     />
                                 </div>
                                 <div class="mb-3">
@@ -424,9 +424,9 @@
                                     </CFormLabel>
                                     <CFormInput 
                                         class=""
-                                        :value="employee.expected_salary_total" 
                                         type="text" 
                                         disabled
+                                        :value="'Rp. '+`${Intl.NumberFormat('id-ID').format(employee.expected_salary_total)}`"
                                     />
                                 </div>
                                 <div class="mb-3" v-if="employee.actual_salary">
@@ -435,9 +435,9 @@
                                     </CFormLabel>
                                     <CFormInput 
                                         class=""
-                                        :value="employee.actual_salary" 
                                         type="text" 
                                         disabled
+                                        :value="'Rp. '+`${Intl.NumberFormat('id-ID').format(employee.actual_salary)}`"
                                     />
                                 </div>
                                 <div class="mb-3" v-if="employee.exit_date">

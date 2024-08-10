@@ -134,8 +134,8 @@ const tableExample = [
           <CCardBody>
             <CRow>
               <CCol :sm="5">
-                <h4 id="traffic" class="card-title mb-0">Traffic</h4>
-                <div class="small text-body-secondary">January - July 2023</div>
+                <h4 id="traffic" class="card-title mb-0">Transaksi</h4>
+                <div class="small text-body-secondary">January - July 2024</div>
               </CCol>
               <CCol :sm="7" class="d-none d-md-block">
                 <CButton color="primary" class="float-end">
@@ -164,7 +164,7 @@ const tableExample = [
               :xl="{ cols: 5 }"
               class="mb-2 text-center"
             >
-              <CCol>
+              <!-- <CCol>
                 <div class="text-body-secondary">Visits</div>
                 <div class="fw-semibold text-truncate">29.703 Users (40%)</div>
                 <CProgress class="mt-2" color="success" thin :precision="1" :value="40" />
@@ -188,14 +188,14 @@ const tableExample = [
                 <div class="text-body-secondary">Bounce Rate</div>
                 <div class="fw-semibold text-truncate">Average Rate (40.15%)</div>
                 <CProgress class="mt-2" :value="40" thin :precision="1" />
-              </CCol>
+              </CCol> -->
             </CRow>
           </CCardFooter>
         </CCard>
       </CCol>
     </CRow>
-    <WidgetsStatsD class="mb-4" />
-    <CRow>
+    <!-- <WidgetsStatsD class="mb-4" /> -->
+    <!-- <CRow>
       <CCol :md="12">
         <CCard class="mb-4">
           <CCardHeader> Traffic &amp; Sales </CCardHeader>
@@ -332,6 +332,6 @@ const tableExample = [
           </CCardBody>
         </CCard>
       </CCol>
-    </CRow>
+    </CRow> -->
   </div>
 </template>

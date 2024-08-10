@@ -3,7 +3,7 @@
     import avatar from '@/assets/images/avatars/8.jpg'
     import {ref, watchEffect} from "vue";
     import fetcher from '@/api/fetcher';
-    import { cilPlus, cilPencil, cilInfo, cilMoney, cilGroup, cilCheckAlt, cilPaperPlane, cilPeople, cilTask } from '@coreui/icons';
+    import { cilPlus, cilPencil, cilInfo, cilMoney, cilGroup, cilCheckAlt, cilPaperPlane, cilPeople, cilTask, cilCloudDownload } from '@coreui/icons';
     import CRUDLayout from '@/layouts/CRUDLayout.vue';
     import DefaultModal from "@/components/DefaultModal.vue";
     import TransactionDetailForm from "@/views/transaction/forms/TransactionDetailForm.vue";
@@ -122,6 +122,35 @@
             }
         }
     });
+    const onloadExport = ref(false);
+    const exportExcel = async () => {
+        onloadExport.value = true;
+        const resp = await fetcher.fetch(resourceUrl, "GET", false);
+        const json = await resp.json();
+        if(resp.status != 200){
+            return
+        }
+        const jsonDatas = json.datas;
+        const keys = ["ID", "Tanggal", "Total", "Pengguna Jasa", "Tanggal Mulai", "Alamat"];
+        const rows = jsonDatas.map( data => ([
+            data.id,
+            data.order_date,
+            data.total_price,
+            data.service_user ? data.service_user.fullname : "-",
+            data.start_date,
+            data.address
+        ]));
+        const headers = keys.join(",");
+        const csvRows = [headers, ...rows.map(row => row.join(","))].join("\n");
+
+        const blob = new Blob([csvRows], {type: "text/csv;charset=utf-8"});
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute('download', "data-transaksi.csv");
+        link.click();
+        onloadExport.value = false;
+    }
 </script>
 
 <template>
@@ -197,7 +226,11 @@
         </template>
 
         <template #button-list>
-            <div>
+            <div class="d-flex">
+                <CButton @click="exportExcel" :disabled="onloadExport" class="d-flex align-items-center text-white me-2" color="success" >
+                    <CIcon :icon="cilCloudDownload" class="me-2" />
+                    Export
+                </CButton>
                 <CFormSelect
                     @change="(e) => layout.setQueries('query', e.target.value)"
                     :options="[
@@ -226,7 +259,8 @@
             <CTableDataCell 
                 class="text-center"
             >
-                {{ data.total_price }}
+                Rp. {{ Intl.NumberFormat('id-ID').format(data.total_price) }}
+                <!-- {{ data.total_price }} -->
             </CTableDataCell>
             <CTableDataCell 
                 class="text-center align-middle"

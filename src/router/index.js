@@ -14,7 +14,18 @@ const routes = [
       {
         path: '/dashboard',
         name: 'Dashboard',
+        meta: {
+          requiresAuth: true,
+        },
         component: () => import('@/views/dashboard/Dashboard.vue'),
+      },
+      {
+        path: '/payment-configs',
+        name: 'Master Pembayaran',
+        meta: {
+          requiresAuth: true,
+        },
+        component: () => import('@/views/payment_settings/PaymentSettingsIndex.vue'),
       },
       {
         path: "/performances",
@@ -127,6 +138,14 @@ const routes = [
           requiresAuth: true,
         },
         component: () => import('@/views/users/supervisor/ManageSupervisorIndex.vue'),
+      },
+      {
+        path: "/service_users",
+        name: "service_users",
+        meta: {
+          requiresAuth: true,
+        },
+        component: () => import('@/views/users/service_user/ManageServiceUserIndex.vue'),
       },
     ]
   },
@@ -451,22 +470,22 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-	// if(to.meta.requiresAuth){
-	// 	const valid = apiMiddleware.checkAuth();
-	// 	if(valid){
-	// 		return next()
-	// 	}else {
-	// 		return next("login");
-	// 	}
-	// } 
-	// if(to.meta.requiresNoAuth){
-	// 	const valid = apiMiddleware.checkAuth();
-	// 	if(!valid){
-	// 		return next()
-	// 	}else {
-	// 		return next("categories");
-	// 	}
-	// }
+	if(to.meta.requiresAuth){
+		const valid = apiMiddleware.checkAuth();
+		if(valid){
+			return next()
+		}else {
+			return next("login");
+		}
+	} 
+	if(to.meta.requiresNoAuth){
+		const valid = apiMiddleware.checkAuth();
+		if(!valid){
+			return next()
+		}else {
+			return next("categories");
+		}
+	}
 	return next();
 });
 

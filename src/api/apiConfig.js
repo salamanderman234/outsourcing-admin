@@ -1,3 +1,3 @@
 export default {
-    baseUrl : "http://localhost:8080/api/v1"
+    baseUrl : "http://api.salamanderman.my.id/api/v1"
 }

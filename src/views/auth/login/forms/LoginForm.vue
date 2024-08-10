@@ -50,9 +50,11 @@
             formUnauthorizedHandler(json);
         }
         if(resp.status == 200) {
+            const user = JSON.stringify(json.data.user);
+            localStorage.setItem('user', user);
             onSuccess(json);
             emits('success', true);
-            router.push({name: 'categories'});
+            router.push({name: 'Dashboard'});
         }
         emits("toast", {
             "title": json.message,

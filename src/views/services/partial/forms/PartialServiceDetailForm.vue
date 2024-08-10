@@ -402,7 +402,11 @@
                     </CCol>
                     <CCol :xs="12" :md="5" class="mb-3 mb-md-0">
                         <CFormLabel>Harga/item</CFormLabel>
-                        <CFormInput disabled placeholder="Harga Per Item" v-model="data.required_items[index].price_per_item"/>
+                        <CFormInput 
+                            disabled 
+                            placeholder="Harga Per Item" 
+                            :value="'Rp. '+`${Intl.NumberFormat('id-ID').format(data.required_items[index].price_per_item)}`"
+                        />
                     </CCol>
                 </CRow>
                 <hr />
@@ -457,7 +461,7 @@
                             <CFormInput 
                                 disabled 
                                 placeholder="Harga Per Item" 
-                                v-model="data.additional_items[index].price_per_item"
+                                :value="'Rp. '+`${Intl.NumberFormat('id-ID').format(data.additional_items[index].price_per_item)}`"
                             />
                         </CCol>
                     </CRow>
@@ -500,12 +504,12 @@
             <CFormLabel for="service_price">Biaya Layanan</CFormLabel>
             <CFormInput 
                 :class="errors.service_price ? 'border-danger' : ''" 
-                v-model="data.service_price" 
                 type="text" 
                 id="service_price" 
                 placeholder="Biaya layanan"
                 text="Harga yang tertera merupakan harga perhari"
                 disabled
+                :value="'Rp. '+`${Intl.NumberFormat('id-ID').format(data.service_price)}`"
             />
             <div class="text-end text-danger" v-if="errors.service_price">
                 <small>{{ errors.service_price }}</small>
@@ -515,12 +519,12 @@
             <CFormLabel for="employee_price">Biaya Gaji Karyawan</CFormLabel>
             <CFormInput 
                 :class="errors.employee_price ? 'border-danger' : ''" 
-                v-model="data.employee_price" 
                 type="text" 
                 id="employee_price" 
                 placeholder="Biaya gaji karyawan"
                 text="Harga yang tertera merupakan harga gaji satu karyawan"
                 disabled
+                :value="'Rp. '+`${Intl.NumberFormat('id-ID').format(data.employee_price)}`"
             />
             <div class="text-end text-danger" v-if="errors.employee_price">
                 <small>{{ errors.employee_price }}</small>
@@ -528,13 +532,16 @@
         </div>
         <div class="mb-3">
             <CFormLabel>Biaya Tambahan</CFormLabel>
-            <CFormInput v-model="additionalPrice" disabled/>
+            <CFormInput 
+                disabled
+                :value="'Rp. '+`${Intl.NumberFormat('id-ID').format(additionalPrice)}`"
+            />
         </div>
         <div class="mb-3">
             <CFormLabel>Biaya Total</CFormLabel>
             <CFormInput 
-                v-model="totalPrice" 
                 disabled
+                :value="'Rp. '+`${Intl.NumberFormat('id-ID').format(totalPrice)}`"
                 text="Harga yang tertera merupakan harga 1 karyawan perhari"
             />
         </div>

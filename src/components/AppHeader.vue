@@ -10,6 +10,10 @@ const headerClassNames = ref('mb-4 p-0')
 const { colorMode, setColorMode } = useColorModes('coreui-free-vue-admin-template-theme')
 const sidebar = useSidebarStore()
 
+let user = localStorage.getItem("user");
+if(user){
+  user = JSON.parse(user);
+}
 onMounted(() => {
   document.addEventListener('scroll', () => {
     if (document.documentElement.scrollTop > 0) {
@@ -92,7 +96,7 @@ onMounted(() => {
         <li class="nav-item py-1">
           <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
         </li>
-        <AppHeaderDropdownAccnt />
+        <AppHeaderDropdownAccnt :user="user" />
       </CHeaderNav>
     </CContainer>
     <CContainer class="px-4" fluid>

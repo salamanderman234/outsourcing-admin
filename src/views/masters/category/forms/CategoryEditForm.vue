@@ -11,7 +11,7 @@
             type: Object,
             required: true,
         },
-    });
+    });emailError
     
     const id = props.category ? props.category.id? props.category.id: 0 : 0;
     const categoryName = ref(props.category ? props.category.category_name ? props.category.category_name : "" : "");

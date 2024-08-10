@@ -24,7 +24,9 @@
                         </small>
                     </span>
                     <div>
-                        <span>Rp.100000</span>
+                        <span>
+                            Rp. {{ Intl.NumberFormat('id-ID').format(payment.total_amount) }}
+                        </span>
                         <CBadge class="d-block mt-1" :color="payment.status == 'pending' ? 'warning' : payment.status == 'failed' ? 'danger' : 'success'">
                             {{ payment.status == 'pending' ? 'Tertunda' : payment.status == 'failed' ? 'Gagal' : 'Berhasil' }}
                         </CBadge>

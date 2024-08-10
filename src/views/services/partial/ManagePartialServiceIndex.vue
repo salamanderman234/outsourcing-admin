@@ -132,7 +132,8 @@
             <CTableDataCell 
                 class="text-center align-middle"
             >
-                {{ data.total_price }}
+            Rp. {{ Intl.NumberFormat('id-ID').format(data.total_price) }}
+                <!-- {{ data.total_price }} -->
             </CTableDataCell>
         </template>   
 

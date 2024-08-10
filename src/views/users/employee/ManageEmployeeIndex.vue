@@ -9,6 +9,7 @@
     import EmployeeDetailForm from "./forms/EmployeeDetailForm.vue";
     import EmployeeEditForm from "./forms/EmployeeEditForm.vue";
     import EmployeeCreateForm from "./forms/EmployeeCreateForm.vue";
+    import EmployeePlacementForm from './forms/EmployeePlacementForm.vue';
     import { useRoute } from 'vue-router';
 
     const route = useRoute();
@@ -60,6 +61,10 @@
     const addModal = ref(null);
     const showAddModal = ref(false);
     const addForm = ref(null);
+
+    const placementsModal = ref(null);
+    const showplacementsModal = ref(false);
+    const placementsForm = ref(null);
 
     const fetchRegencies = async() => {
         const getUrl = '/regencies/';
@@ -119,6 +124,21 @@
         :disable_numbering="true"
     >
         <template #modal-list>
+            <DefaultModal
+                ref="placementsModal"
+                :show="showplacementsModal"
+                :title="`List Penempatan Karyawan`"
+                @toggle="(val) => showplacementsModal = val"
+                @submit="() => false"
+                :disable_save_button="true"
+            >
+                <EmployeePlacementForm
+                    ref="placementsForm" 
+                    :data="detailData"
+                    @toast="(val) => layout.toast(val)"
+                    @toggle="(val) => showplacementsModal = val"
+                />
+            </DefaultModal>
             <DefaultModal
                 ref="detailModal"
                 :show="showDetailModal"
@@ -236,7 +256,12 @@
         </template>   
 
         <template #action-list="{data}">
-            <CDropdownItem :href="`/#/performances?id=${data.employee_profile.id}`">
+            <CDropdownItem 
+                @click="() => {
+                    showplacementsModal = true;
+                    detailData = data;
+                }"
+            >
                 <CIcon :icon="cilGroup" class="me-2" />
                 Lihat List Penempatan
             </CDropdownItem>

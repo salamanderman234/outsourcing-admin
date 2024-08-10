@@ -11,11 +11,11 @@
     <CForm class="px-4 py-4">
         <div class="mb-3">
             <CFormLabel for="service_user" class="d-flex justify-content-between">
-                <span>ID Supervisor</span>
+                <span>ID Karyawan</span>
             </CFormLabel>
             <CFormInput 
                 class=""
-                :value="'#'+data.supervisor_profile.id" 
+                :value="'#'+data.employee_profile.id" 
                 type="text" 
                 disabled
             />
@@ -25,24 +25,24 @@
         </small>
         <hr />
         <CAccordion class="mb-3">
-            <CAccordionItem :item-key="detail.id" v-for="detail in data.supervisor_profile.placements.filter((e) => e.status == 'ongoing')">
+            <CAccordionItem :item-key="detail.placement.placement.id" v-for="detail in data.employee_profile.placements.filter((e) => e.placement.placement.status == 'ongoing')">
                 <CAccordionHeader >
                     <div class="d-flex justify-content-between w-100 px-2">
                         <span>
                             <span>
-                                {{ detail.address ? detail.name : '-' }}
-                                <a :href="`/#/placements?id=${detail.id}`">#{{ detail.id }}</a>
+                                {{ detail.placement.placement.address ? detail.placement.placement.name : '-' }}
+                                <a :href="`/#/placements?id=${detail.placement.placement.id}`">#{{ detail.placement.placement.id }}</a>
                             </span>
                             <small class="d-block text-secondary">
-                                {{ detail.address ? detail.address : "" }}
+                                {{ detail.placement.placement.address ? detail.placement.placement.address : "" }}
                             </small>
                         </span>
                         <div class="d-flex align-items-center">
                             <CBadge 
                                 class="ms-2" 
-                                :color="detail.status == 'ongoing' ? 'primary' : detail.status == 'suspend' ? 'warning' : 'success'"
+                                :color="detail.placement.placement.status == 'ongoing' ? 'primary' : detail.placement.placement.status == 'suspend' ? 'warning' : 'success'"
                             >
-                                {{ detail.status == 'ongoing' ? 'Sedang Berjalan' : detail.status == 'suspend' ? 'Suspend' : 'Selesai' }}
+                                {{ detail.placement.placement.status == 'ongoing' ? 'Sedang Berjalan' : detail.placement.placement.status == 'suspend' ? 'Suspend' : 'Selesai' }}
                             </CBadge>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                         </CFormLabel>
                         <CFormInput 
                             class=""
-                            :value="`#${detail.id}`" 
+                            :value="`#${detail.placement.placement.id}`" 
                             type="text" 
                             disabled
                         />
@@ -65,7 +65,7 @@
                         </CFormLabel>
                         <CFormInput 
                             class=""
-                            :value="`${detail.name}`" 
+                            :value="`${detail.placement.placement.name}`" 
                             type="text" 
                             disabled
                         />
@@ -76,7 +76,7 @@
                         </CFormLabel>
                         <CFormInput 
                             class=""
-                            :value="`${detail.name}`" 
+                            :value="`${detail.placement.placement.name}`" 
                             type="text" 
                             disabled
                         />
@@ -87,7 +87,7 @@
                         </CFormLabel>
                         <CFormInput 
                             class=""
-                            :value="`${new Date(detail.start_date).toISOString().slice(0,10)}`" 
+                            :value="`${new Date(detail.placement.placement.start_date).toISOString().slice(0,10)}`" 
                             type="text" 
                             disabled
                         />
@@ -95,7 +95,7 @@
                 </CAccordionBody>
             </CAccordionItem>
         </CAccordion>
-        <div class="text-center text-secondary mb-3" v-if="data.supervisor_profile.placements.filter((e) => e.status == 'ongoing').length <= 0">
+        <div class="text-center text-secondary mb-3" v-if="data.employee_profile.placements.filter((e) => e.placement.placement.status == 'ongoing').length <= 0">
             Data tidak ditemukan
         </div>
         <small class="fw-bold text-secondary text-uppercase">
@@ -103,24 +103,24 @@
         </small>
         <hr />
         <CAccordion class="mb-3">
-            <CAccordionItem :item-key="detail.id" v-for="detail in data.supervisor_profile.placements.filter((e) => e.status != 'ongoing')">
+            <CAccordionItem :item-key="detail.placement.placement.id" v-for="detail in data.employee_profile.placements.filter((e) => e.placement.placement.status != 'ongoing')">
                 <CAccordionHeader >
                     <div class="d-flex justify-content-between w-100 px-2">
                         <span>
                             <span>
-                                {{ detail.address ? detail.name : '-' }}
-                                <a :href="`/#/placements?id=${detail.id}`">#{{ detail.id }}</a>
+                                {{ detail.placement.placement.address ? detail.placement.placement.name : '-' }}
+                                <a :href="`/#/placements?id=${detail.placement.placement.id}`">#{{ detail.placement.placement.id }}</a>
                             </span>
                             <small class="d-block text-secondary">
-                                {{ detail.address ? detail.address : "" }}
+                                {{ detail.placement.placement.address ? detail.placement.placement.address : "" }}
                             </small>
                         </span>
                         <div class="d-flex align-items-center">
                             <CBadge 
                                 class="ms-2" 
-                                :color="detail.status == 'ongoing' ? 'primary' : detail.status == 'suspend' ? 'warning' : 'success'"
+                                :color="detail.placement.placement.status == 'ongoing' ? 'primary' : detail.placement.placement.status == 'suspend' ? 'warning' : 'success'"
                             >
-                                {{ detail.status == 'ongoing' ? 'Sedang Berjalan' : detail.status == 'suspend' ? 'Suspend' : 'Selesai' }}
+                                {{ detail.placement.placement.status == 'ongoing' ? 'Sedang Berjalan' : detail.placement.placement.status == 'suspend' ? 'Suspend' : 'Selesai' }}
                             </CBadge>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                         </CFormLabel>
                         <CFormInput 
                             class=""
-                            :value="`#${detail.id}`" 
+                            :value="`#${detail.placement.placement.id}`" 
                             type="text" 
                             disabled
                         />
@@ -143,7 +143,7 @@
                         </CFormLabel>
                         <CFormInput 
                             class=""
-                            :value="`${detail.name}`" 
+                            :value="`${detail.placement.placement.name}`" 
                             type="text" 
                             disabled
                         />
@@ -154,7 +154,7 @@
                         </CFormLabel>
                         <CFormInput 
                             class=""
-                            :value="`${detail.name}`" 
+                            :value="`${detail.placement.placement.name}`" 
                             type="text" 
                             disabled
                         />
@@ -165,7 +165,7 @@
                         </CFormLabel>
                         <CFormInput 
                             class=""
-                            :value="`${new Date(detail.start_date).toISOString().slice(0,10)}`" 
+                            :value="`${new Date(detail.placement.placement.start_date).toISOString().slice(0,10)}`" 
                             type="text" 
                             disabled
                         />
@@ -173,7 +173,7 @@
                 </CAccordionBody>
             </CAccordionItem>
         </CAccordion>
-        <div class="text-center text-secondary mb-3" v-if="data.supervisor_profile.placements.filter((e) => e.status != 'ongoing').length <= 0">
+        <div class="text-center text-secondary mb-3" v-if="data.employee_profile.placements.filter((e) => e.placement.placement.status != 'ongoing').length <= 0">
             Data tidak ditemukan
         </div>
     </CForm>

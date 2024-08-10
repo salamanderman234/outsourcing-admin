@@ -348,33 +348,33 @@
                         <div class="mb-3">
                             <CFormLabel for="category">Harga Layanan</CFormLabel>
                             <CFormInput 
-                                :value="detail.service_price" 
                                 type="text" 
                                 disabled
+                                :value="'Rp. '+`${Intl.NumberFormat('id-ID').format(detail.service_price)}`"
                             />
                         </div>
                         <div class="mb-3">
                             <CFormLabel for="category">Harga Gaji Karyawan</CFormLabel>
                             <CFormInput 
-                                :value="detail.employee_price" 
                                 type="text" 
                                 disabled
+                                :value="'Rp. '+`${Intl.NumberFormat('id-ID').format(detail.employee_price)}`"
                             />
                         </div>
                         <div class="mb-3">
                             <CFormLabel for="category">Harga Tambahan</CFormLabel>
                             <CFormInput 
-                                :value="detail.etc_price" 
                                 type="text" 
                                 disabled
+                                :value="'Rp. '+`${Intl.NumberFormat('id-ID').format(detail.etc_price)}`"
                             />
                         </div>
                         <div class="mb-3">
                             <CFormLabel for="category">Sub Total</CFormLabel>
                             <CFormInput 
-                                :value="detail.sub_total_price" 
                                 type="text" 
                                 disabled
+                                :value="'Rp. '+`${Intl.NumberFormat('id-ID').format(detail.sub_total_price)}`"
                             />
                         </div>
                     </CCol>
